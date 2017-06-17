@@ -36,7 +36,7 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example using the `YUV` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
 
 ![alt text][image2]
@@ -74,7 +74,7 @@ For these 10 labels:  [ 0.  1.  0.  0.  1.  0.  1.  0.  0.  0.]
 
 ### Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+#### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
 I explored several configurations of window sizes and positions, with various overlaps in the X and Y directions. The duplicates and false positives are avoided based on the repition of the bounding boxes in the subsequent frames.
 
@@ -84,7 +84,7 @@ I explored several configurations of window sizes and positions, with various ov
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Here are some example images:
 
 ![alt text][image4]
 ---
