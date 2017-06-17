@@ -14,15 +14,15 @@ The goals / steps of this project are the following:
 
 
 [//]: # (Image References)
-[image1]: ./output_images/vehicleAndnonVehicle.png
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
-
+[image1]: ./output_images/randomSamples.png
+[image2]: ./output_images/HOG_example.png
+[image3]: ./output_images/slidingwindow1.png
+[image4]: ./output_images/slidingwindow2.png
+[image5]: ./output_images/heatmap1.png
+[image6]: ./output_images/heatmap2.png
+[image7]: ./output_images/heatmap3.png
+[image8]: ./output_images/heatmap4.png
+[video1]: ./project_video_out.mp4
 
 ###Histogram of Oriented Gradients (HOG)
 
@@ -43,19 +43,44 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+I tried various combinations of parameters and finally settled for the following values
+
+```
+colorspace = 'YUV' # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
+orient = 11
+pix_per_cell = 16
+cell_per_block = 2
+hog_channel = 'ALL' # Can be 0, 1, 2, or "ALL"
+```
+based upon the performance of the SVM classifier using the above values.
+
+```
+56.74 Seconds to extract HOG features...
+Using: 11 orientations 16 pixels per cell and 2 cells per block
+Feature vector length: 1188
+```
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+I trained a linear SVM with the default classifier parameters and using HOG features alone. spatial intensity or channel intensity histogram features can also be tried in the future.
+
+```
+1.11 Seconds to train SVC...
+Test Accuracy of SVC =  0.9806
+My SVC predicts:  [ 0.  1.  0.  0.  1.  0.  1.  0.  0.  0.]
+For these 10 labels:  [ 0.  1.  0.  0.  1.  0.  1.  0.  0.  0.]
+0.00302 Seconds to predict 10 labels with SVC
+```
 
 ###Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+I explored several configurations of window sizes and positions, with various overlaps in the X and Y directions. The duplicates and false positives are avoided based on the repition of the bounding boxes in the subsequent frames.
 
 ![alt text][image3]
+
+![alt text][image4]
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
@@ -76,15 +101,17 @@ I recorded the positions of positive detections in each frame of the video.  Fro
 
 Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
-### Here are six frames and their corresponding heatmaps:
-
 ![alt text][image5]
 
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
+A threshold is applied to the heatmap with a value of 1, setting all pixels that don't exceed the threshold to zero. The result is below:
+
 ![alt text][image6]
 
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
+### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
 ![alt text][image7]
+
+### Here the resulting bounding boxes are drawn onto the last frame in the series:
+![alt text][image8]
 
 
 
@@ -94,5 +121,7 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+* I trained a linear SVM with the default classifier parameters and using HOG features alone. Spatial intensity or channel intensity histogram features can also be tried in the future.
+* CNN can be used as a classifier instead of a simple SVC to have even more generalise classifier.
+* Integrating detections from previous frames solved the problem of misclassification. Window overlap has to be maximised to improve the classifier accuracy with the help of GPU and advanced classifiers.
 
